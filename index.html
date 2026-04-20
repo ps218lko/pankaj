@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>RAKESH PSK</title>
-
+  <title>PSK RAKESH</title>
   <style>
     body { font-family: Arial; background:#f4f6f8; }
     h2 { text-align:center; }
 
     form {
-      width: 90%;
+      width: 80%;
       margin: auto;
       background: white;
-      padding: 20px;
-      border-radius: 10px;
+      padding: 15px;
+      border-radius: 8px;
     }
 
     table {
       border-collapse: collapse;
-      width: 100%;
+      width: 80%;
       margin-top: 15px;
     }
 
@@ -49,9 +48,8 @@
 
 <body>
 
-<h2>PSK WORKS Entry</h2>
+<h2>PSK ISR LEDGER ENTRY</h2>
 
-<!-- ✅ MUST BE EXACT -->
 <form id="entryForm">
 
   Date: <input type="date" name="date" required>
@@ -84,80 +82,28 @@
 </form>
 
 <script>
-window.addEventListener("DOMContentLoaded", function () {
+document.getElementById("entryForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
 
-  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw3uTrfARsP4rFgsAIuMeOFKi0TrF24HsDg2NMcDrQRJ8wjFEKvkg6J5m6-i53g3otzbg/exec";
+  const formData = Object.fromEntries(new FormData(this));
 
-  const form = document.querySelector("#entryForm");
+  try {
+    await fetch("https://script.google.com/macros/s/AKfycbwWYKrd81oaUF8-lVMqSOQBCNyO2RbUqmG_wjg_hZfUTJQm0xYDzeWke-cWYk04M7I7fw/exec", {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "text/plain"
+      },
+      body: JSON.stringify(formData)
+    });
 
-  /* ✅ HARD CHECK */
-  if (!form) {
-    document.body.innerHTML = "<h2 style='color:red'>ERROR: entryForm not found</h2>";
-    return;
+    alert("Saved Successfully!");
+    this.reset();
+
+  } catch (err) {
+    console.error(err);
+    alert("Error submitting data!");
   }
-
-  /* ---------------- LOAD RATES ---------------- */
-  async function loadRates() {
-    try {
-      const res = await fetch(WEB_APP_URL + "?getRates=1");
-      const rates = await res.json();
-
-      const skuMap = {
-        qty_1: "Rajnigandha 1.25GM",
-        qty_2: "Rajnigandha 2.20GM",
-        qty_3: "Rajnigandha 4g",
-        qty_4: "Rajnigandha 17g",
-        qty_5: "Rajnigandha 100gm",
-        qty_6: "RG Saffron 2.30GM",
-        qty_7: "RG Meetha 2.75GM",
-        qty_8: "Silver Mini 0.25g",
-        qty_9: "Silver Mini 0.45g",
-        qty_10: "Silver 4.25g",
-        qty_11: "Silver 10g",
-        qty_12: "Silver 50g",
-        qty_13: "Tulsi 5.75GM",
-        qty_14: "Tulsi 30GM"
-      };
-
-      for (let i = 1; i <= 14; i++) {
-        const sku = skuMap["qty_" + i];
-        const input = document.querySelector(`[name="rate_${i}"]`);
-
-        if (rates[sku] && input) {
-          input.value = rates[sku];
-        }
-      }
-
-    } catch (err) {
-      console.error("Rate load error:", err);
-    }
-  }
-
-  /* ---------------- SUBMIT ---------------- */
-  form.addEventListener("submit", async function(e) {
-    e.preventDefault();
-
-    const data = Object.fromEntries(new FormData(form));
-
-    try {
-      await fetch(WEB_APP_URL, {
-        method: "POST",
-        mode: "no-cors",
-        body: JSON.stringify(data)
-      });
-
-      alert("Saved Successfully!");
-      form.reset();
-      loadRates();
-
-    } catch (err) {
-      console.error(err);
-      alert("Submit failed");
-    }
-  });
-
-  loadRates();
-
 });
 </script>
 
