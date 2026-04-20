@@ -1,111 +1,77 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>PSK WORKS Entry</title>
-  <style>
-    body { font-family: Arial; background:#f4f6f8; }
-    h2 { text-align:center; }
-
-    form {
-      width: 90%;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-    }
-
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      margin-top: 15px;
-    }
-
-    td, th {
-      border: 1px solid #ccc;
-      padding: 6px;
-      text-align: center;
-    }
-
-    input {
-      width: 90px;
-      padding: 4px;
-    }
-
-    button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      background: green;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: darkgreen;
-    }
-  </style>
-</head>
-
-<body>
-
-<h2>PSK WORKS Entry</h2>
-
-<form id="entryForm">
-
-  Date: <input type="date" name="date" required>
-
-  <table>
-    <tr><th>SKU</th><th>Qty</th><th>Rate</th></tr>
-
-    <tr><td>Rajnigandha 1.25GM</td><td><input name="qty_1"></td><td><input name="rate_1"></td></tr>
-    <tr><td>Rajnigandha 2.20GM</td><td><input name="qty_2"></td><td><input name="rate_2"></td></tr>
-    <tr><td>Rajnigandha 4g</td><td><input name="qty_3"></td><td><input name="rate_3"></td></tr>
-    <tr><td>Rajnigandha 17g</td><td><input name="qty_4"></td><td><input name="rate_4"></td></tr>
-    <tr><td>Rajnigandha 100gm</td><td><input name="qty_5"></td><td><input name="rate_5"></td></tr>
-
-    <tr><td>RG Saffron 2.30GM</td><td><input name="qty_6"></td><td><input name="rate_6"></td></tr>
-    <tr><td>RG Meetha 2.75GM</td><td><input name="qty_7"></td><td><input name="rate_7"></td></tr>
-
-    <tr><td>Silver Mini 0.25g</td><td><input name="qty_8"></td><td><input name="rate_8"></td></tr>
-    <tr><td>Silver Mini 0.45g</td><td><input name="qty_9"></td><td><input name="rate_9"></td></tr>
-
-    <tr><td>Silver 4.25g</td><td><input name="qty_10"></td><td><input name="rate_10"></td></tr>
-    <tr><td>Silver 10g</td><td><input name="qty_11"></td><td><input name="rate_11"></td></tr>
-    <tr><td>Silver 50g</td><td><input name="qty_12"></td><td><input name="rate_12"></td></tr>
-
-    <tr><td>Tulsi 5.75GM</td><td><input name="qty_13"></td><td><input name="rate_13"></td></tr>
-    <tr><td>Tulsi 30GM</td><td><input name="qty_14"></td><td><input name="rate_14"></td></tr>
-
-  </table>
-
-  <button type="submit">Submit</button>
-</form>
-
 <script>
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxVE3fbiOQPURdJvdC3gNajeqhlNnZAPckJOcjqEzQZ7dvtxV4jZJdlO4g37fOdisJV-w/exec";
+
+/* -----------------------
+   SKU MAP (IMPORTANT)
+------------------------*/
+const skuMap = {
+  qty_1: "Rajnigandha 1.25GM",
+  qty_2: "Rajnigandha 2.20GM",
+  qty_3: "Rajnigandha 4g",
+  qty_4: "Rajnigandha 17g",
+  qty_5: "Rajnigandha 100gm",
+  qty_6: "RG Saffron 2.30GM",
+  qty_7: "RG Meetha 2.75GM",
+  qty_8: "Silver Mini 0.25g",
+  qty_9: "Silver Mini 0.45g",
+  qty_10: "Silver 4.25g",
+  qty_11: "Silver 10g",
+  qty_12: "Silver 50g",
+  qty_13: "Tulsi 5.75GM",
+  qty_14: "Tulsi 30GM"
+};
+
+/* -----------------------
+   LOAD RATES FROM MASTER
+------------------------*/
+async function loadRates() {
+  try {
+    const res = await fetch(WEB_APP_URL + "?getRates=1");
+    const rates = await res.json();
+
+    for (let i = 1; i <= 14; i++) {
+      const sku = skuMap["qty_" + i];
+      const input = document.querySelector(`[name="rate_${i}"]`);
+
+      if (rates[sku] && input) {
+        input.value = rates[sku];
+      }
+    }
+
+  } catch (err) {
+    console.error("Rate load error:", err);
+  }
+}
+
+/* -----------------------
+   SUBMIT FORM
+------------------------*/
 document.getElementById("entryForm").addEventListener("submit", async function(e) {
   e.preventDefault();
 
   const formData = Object.fromEntries(new FormData(this));
 
   try {
-    await fetch("https://script.google.com/macros/s/AKfycby1mN_FoCwKnRSDvdMv7D3ygZDZz8ZlLVVBC2DwrSfpgwZNazKYZ1M4Eb2sN46ChsPKGA/exec", {
+    await fetch(https://script.google.com/macros/s/AKfycbxVE3fbiOQPURdJvdC3gNajeqhlNnZAPckJOcjqEzQZ7dvtxV4jZJdlO4g37fOdisJV-w/exec, {
       method: "POST",
       mode: "no-cors",
-      headers: {
-        "Content-Type": "text/plain"
-      },
       body: JSON.stringify(formData)
     });
 
     alert("Saved Successfully!");
     this.reset();
 
+    // reload rates after reset
+    loadRates();
+
   } catch (err) {
     console.error(err);
     alert("Error submitting data!");
   }
 });
-</script>
 
-</body>
-</html>
+/* -----------------------
+   AUTO RUN ON LOAD
+------------------------*/
+window.addEventListener("load", loadRates);
+</script>
