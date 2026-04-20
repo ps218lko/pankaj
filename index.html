@@ -27,8 +27,9 @@
     }
 
     input {
-      width: 90px;
-      padding: 4px;
+      width: 120px;
+      padding: 5px;
+      margin: 5px;
     }
 
     button {
@@ -52,7 +53,16 @@
 
 <form id="entryForm">
 
-  Date: <input type="date" name="date" required>
+  Date: 
+  <input type="date" name="date" required>
+
+  <br><br>
+
+  Opening Amount:
+  <input type="number" name="opening_amount" placeholder="Opening Amount">
+
+  Primary Amount:
+  <input type="number" name="primary_amount" placeholder="Primary Amount">
 
   <table>
     <tr><th>SKU</th><th>Qty</th><th>Rate</th></tr>
@@ -88,7 +98,7 @@ document.getElementById("entryForm").addEventListener("submit", async function(e
   const formData = Object.fromEntries(new FormData(this));
 
   try {
-    await fetch("https://script.google.com/macros/s/AKfycbwWYKrd81oaUF8-lVMqSOQBCNyO2RbUqmG_wjg_hZfUTJQm0xYDzeWke-cWYk04M7I7fw/exec", {
+    await fetch("https://script.google.com/macros/s/AKfycbws3O0m5dIEuoJ5d2bUapadSXePfZD67UbhAvvEhaivLwl7QChYcMLytxyfbBW69JIUFw/exec", {
       method: "POST",
       mode: "no-cors",
       headers: {
