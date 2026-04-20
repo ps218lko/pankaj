@@ -17,11 +17,7 @@
   Date: <input type="date" name="date" required><br><br>
 
   <table>
-    <tr>
-      <th>SKU</th>
-      <th>Qty</th>
-      <th>Rate</th>
-    </tr>
+    <tr><th>SKU</th><th>Qty</th><th>Rate</th></tr>
 
     <tr><td>Rajnigandha 1.25GM</td><td><input name="qty_1"></td><td><input name="rate_1"></td></tr>
     <tr><td>Rajnigandha 2.20GM</td><td><input name="qty_2"></td><td><input name="rate_2"></td></tr>
@@ -47,26 +43,25 @@
   <button type="submit">Submit</button>
 </form>
 
-<!-- ✅ FIXED SCRIPT -->
 <script>
-document.getElementById("entryForm").addEventListener("submit", async (e) => {
+document.getElementById("entryForm").addEventListener("submit", async function(e) {
   e.preventDefault();
 
-  const formData = Object.fromEntries(new FormData(e.target));
+  const formData = Object.fromEntries(new FormData(this));
 
   try {
-    await fetch("https://script.google.com/macros/s/AKfycbyy-iMpzS293Ixdr6LtcKbZWgfK98PUfw582sAAH_KgUBVI6QFMXT4PXPPCChsJpvYUTw/exec", {
+    await fetch("https://script.google.com/macros/s/PASTE_YOUR_REAL_URL/exec", {
       method: "POST",
       mode: "no-cors",
       body: JSON.stringify(formData)
     });
 
     alert("Saved Successfully!");
-    e.target.reset();
+    this.reset();
 
-  } catch (err) {
+  } catch (error) {
     alert("Network Error!");
-    console.error(err);
+    console.error(error);
   }
 });
 </script>
