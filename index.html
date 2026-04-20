@@ -1,74 +1,69 @@
 <script>
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxVE3fbiOQPURdJvdC3gNajeqhlNnZAPckJOcjqEzQZ7dvtxV4jZJdlO4g37fOdisJV-w/exec";
+window.addEventListener("load", function () {
 
-/* -----------------------
-   SKU MAP (IMPORTANT)
-------------------------*/
-const skuMap = {
-  qty_1: "Rajnigandha 1.25GM",
-  qty_2: "Rajnigandha 2.20GM",
-  qty_3: "Rajnigandha 4g",
-  qty_4: "Rajnigandha 17g",
-  qty_5: "Rajnigandha 100gm",
-  qty_6: "RG Saffron 2.30GM",
-  qty_7: "RG Meetha 2.75GM",
-  qty_8: "Silver Mini 0.25g",
-  qty_9: "Silver Mini 0.45g",
-  qty_10: "Silver 4.25g",
-  qty_11: "Silver 10g",
-  qty_12: "Silver 50g",
-  qty_13: "Tulsi 5.75GM",
-  qty_14: "Tulsi 30GM"
-};
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxVE3fbiOQPURdJvdC3gNajeqhlNnZAPckJOcjqEzQZ7dvtxV4jZJdlO4g37fOdisJV-w/exec";
 
-/* -----------------------
-   LOAD RATES FROM MASTER
-------------------------*/
-async function loadRates() {
-  try {
-    const res = await fetch(WEB_APP_URL + "?getRates=1");
-    const rates = await res.json();
+  const skuMap = {
+    qty_1: "Rajnigandha 1.25GM",
+    qty_2: "Rajnigandha 2.20GM",
+    qty_3: "Rajnigandha 4g",
+    qty_4: "Rajnigandha 17g",
+    qty_5: "Rajnigandha 100gm",
+    qty_6: "RG Saffron 2.30GM",
+    qty_7: "RG Meetha 2.75GM",
+    qty_8: "Silver Mini 0.25g",
+    qty_9: "Silver Mini 0.45g",
+    qty_10: "Silver 4.25g",
+    qty_11: "Silver 10g",
+    qty_12: "Silver 50g",
+    qty_13: "Tulsi 5.75GM",
+    qty_14: "Tulsi 30GM"
+  };
 
-    for (let i = 1; i <= 14; i++) {
-      const sku = skuMap["qty_" + i];
-      const input = document.querySelector(`[name="rate_${i}"]`);
+  async function loadRates() {
+    try {
+      const res = await fetch(WEB_APP_URL + "?getRates=1");
+      const rates = await res.json();
 
-      if (rates[sku] && input) {
-        input.value = rates[sku];
+      for (let i = 1; i <= 14; i++) {
+        const sku = skuMap["qty_" + i];
+        const input = document.querySelector(`[name="rate_${i}"]`);
+
+        if (rates[sku] && input) {
+          input.value = rates[sku];
+        }
       }
+
+    } catch (err) {
+      console.error("Rate load error:", err);
     }
-
-  } catch (err) {
-    console.error("Rate load error:", err);
   }
-}
 
-/* -----------------------
-   SUBMIT FORM
-------------------------*/
-document.getElementById("entryForm").addEventListener("submit", async function(e) {
-  e.preventDefault();
+  const form = document.getElementById("entryForm");
 
-  const formData = Object.fromEntries(new FormData(this));
+  form.addEventListener("submit", async function(e) {
+    e.preventDefault();
 
-  try {
-    await fetch("https://script.google.com/macros/s/AKfycbxVE3fbiOQPURdJvdC3gNajeqhlNnZAPckJOcjqEzQZ7dvtxV4jZJdlO4g37fOdisJV-w/exec", {
-      method: "POST",
-      mode: "no-cors",
-      body: JSON.stringify(formData)
-    });
+    const formData = Object.fromEntries(new FormData(form));
 
-    alert("Saved Successfully!");
-    this.reset();
-    loadRates();
+    try {
+      await fetch(WEB_APP_URL, {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify(formData)
+      });
 
-  } catch (err) {
-    console.error(err);
-    alert("Error submitting data!");
-  }
+      alert("Saved Successfully!");
+      form.reset();
+      loadRates();
+
+    } catch (err) {
+      console.error(err);
+      alert("Error submitting data!");
+    }
+  });
+
+  loadRates();
+
 });
-/* -----------------------
-   AUTO RUN ON LOAD
-------------------------*/
-window.addEventListener("load", loadRates);
 </script>
