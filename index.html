@@ -1,69 +1,38 @@
 <script>
-window.addEventListener("load", function () {
-
-  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxVE3fbiOQPURdJvdC3gNajeqhlNnZAPckJOcjqEzQZ7dvtxV4jZJdlO4g37fOdisJV-w/exec";
-
-  const skuMap = {
-    qty_1: "Rajnigandha 1.25GM",
-    qty_2: "Rajnigandha 2.20GM",
-    qty_3: "Rajnigandha 4g",
-    qty_4: "Rajnigandha 17g",
-    qty_5: "Rajnigandha 100gm",
-    qty_6: "RG Saffron 2.30GM",
-    qty_7: "RG Meetha 2.75GM",
-    qty_8: "Silver Mini 0.25g",
-    qty_9: "Silver Mini 0.45g",
-    qty_10: "Silver 4.25g",
-    qty_11: "Silver 10g",
-    qty_12: "Silver 50g",
-    qty_13: "Tulsi 5.75GM",
-    qty_14: "Tulsi 30GM"
-  };
-
-  async function loadRates() {
-    try {
-      const res = await fetch(WEB_APP_URL + "?getRates=1");
-      const rates = await res.json();
-
-      for (let i = 1; i <= 14; i++) {
-        const sku = skuMap["qty_" + i];
-        const input = document.querySelector(`[name="rate_${i}"]`);
-
-        if (rates[sku] && input) {
-          input.value = rates[sku];
-        }
-      }
-
-    } catch (err) {
-      console.error("Rate load error:", err);
-    }
-  }
+window.onload = function () {
 
   const form = document.getElementById("entryForm");
+
+  // SAFETY CHECK (THIS PREVENTS BLANK PAGE)
+  if (!form) {
+    console.error("FORM NOT FOUND - CHECK ID entryForm");
+    document.body.innerHTML = "<h2 style='color:red'>Form Not Found</h2>";
+    return;
+  }
+
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxVE3fbiOQPURdJvdC3gNajeqhlNnZAPckJOcjqEzQZ7dvtxV4jZJdlO4g37fOdisJV-w/exec";
 
   form.addEventListener("submit", async function(e) {
     e.preventDefault();
 
-    const formData = Object.fromEntries(new FormData(form));
+    const data = Object.fromEntries(new FormData(form));
 
     try {
       await fetch(WEB_APP_URL, {
         method: "POST",
         mode: "no-cors",
-        body: JSON.stringify(formData)
+        body: JSON.stringify(data)
       });
 
       alert("Saved Successfully!");
       form.reset();
-      loadRates();
 
     } catch (err) {
       console.error(err);
-      alert("Error submitting data!");
+      alert("Submit Failed");
     }
   });
 
-  loadRates();
-
-});
+  console.log("Script Loaded Successfully");
+};
 </script>
