@@ -47,36 +47,25 @@
   <button type="submit">Submit</button>
 </form>
 
-<script>
 document.getElementById("entryForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const formData = Object.fromEntries(new FormData(e.target));
 
   try {
-    const res = await fetch("https://script.google.com/macros/s/AKfycbyy-iMpzS293Ixdr6LtcKbZWgfK98PUfw582sAAH_KgUBVI6QFMXT4PXPPCChsJpvYUTw/exec", {
+    await fetch("YOUR_WEB_APP_URL", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      mode: "no-cors",   // ⭐ IMPORTANT FIX
       body: JSON.stringify(formData)
     });
 
-    const result = await res.json();
-
-    if (result.status === "success") {
-      alert("Saved Successfully!");
-      e.target.reset();
-    } else {
-      alert("Error saving data!");
-    }
+    alert("Saved Successfully!");
+    e.target.reset();
 
   } catch (err) {
     alert("Network Error!");
     console.error(err);
   }
 });
-</script>
-
 </body>
 </html>
