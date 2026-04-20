@@ -7,7 +7,7 @@
     h2 { text-align:center; }
 
     form {
-      width: 80%;
+      width: 85%;
       margin: auto;
       background: white;
       padding: 15px;
@@ -16,7 +16,7 @@
 
     table {
       border-collapse: collapse;
-      width: 80%;
+      width: 100%;
       margin-top: 15px;
     }
 
@@ -68,7 +68,11 @@
   <input type="number" name="paid" placeholder="Paid Amount">
 
   <table>
-    <tr><th>SKU</th><th>Qty</th><th>Rate</th></tr>
+    <tr>
+      <th>SKU</th>
+      <th>Qty</th>
+      <th>Rate</th>
+    </tr>
 
     <tr><td>Rajnigandha 1.25GM</td><td><input name="qty_1"></td><td><input name="rate_1"></td></tr>
     <tr><td>Rajnigandha 2.20GM</td><td><input name="qty_2"></td><td><input name="rate_2"></td></tr>
@@ -101,12 +105,8 @@ document.getElementById("entryForm").addEventListener("submit", async function(e
   const formData = Object.fromEntries(new FormData(this));
 
   try {
-    await fetch("https://script.google.com/macros/s/AKfycbx4q9A9CMIH55XM4c3EVVkl79rkOHg78K-KU0oeQYX-4yAD060VGIArKL_FxB9PTwa7lw/exec", {
+    await fetch("https://script.google.com/macros/s/AKfycbwbOwKkfQPodWdite_pDFtD6N9lOXYx3i6yQXfkJoIMzY1G4_dgSWRMII8Kz5GqcK6GWw/exec", {
       method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "text/plain"
-      },
       body: JSON.stringify(formData)
     });
 
