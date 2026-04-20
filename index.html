@@ -51,7 +51,7 @@
 
 <h2>PSK WORKS Entry</h2>
 
-<!-- ⚠️ IMPORTANT: ID MUST MATCH -->
+<!-- ✅ MUST BE EXACT -->
 <form id="entryForm">
 
   Date: <input type="date" name="date" required>
@@ -84,46 +84,19 @@
 </form>
 
 <script>
-window.addEventListener("load", function () {
+window.addEventListener("DOMContentLoaded", function () {
 
-  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxVE3fbiOQPURdJvdC3gNajeqhlNnZAPckJOcjqEzQZ7dvtxV4jZJdlO4g37fOdisJV-w/exec";
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwX7ubSPUdIoGBweeTdJdcxKoN_AZT8z6sKdqcW3vL6ayXrW1MtK4oNlhjnmMAoKfM6Jw/exec";
 
-  const form = document.getElementById("entryForm");
+  const form = document.querySelector("#entryForm");
 
-  // SAFETY CHECK (prevents blank page)
+  /* ✅ HARD CHECK */
   if (!form) {
-    document.body.innerHTML = "<h2 style='color:red'>ERROR: Form Not Found</h2>";
+    document.body.innerHTML = "<h2 style='color:red'>ERROR: entryForm not found</h2>";
     return;
   }
 
-  /* -----------------------
-     SUBMIT FORM
-  ------------------------*/
-  form.addEventListener("submit", async function(e) {
-    e.preventDefault();
-
-    const formData = Object.fromEntries(new FormData(form));
-
-    try {
-      await fetch(WEB_APP_URL, {
-        method: "POST",
-        mode: "no-cors",
-        body: JSON.stringify(formData)
-      });
-
-      alert("Saved Successfully!");
-      form.reset();
-      loadRates();
-
-    } catch (err) {
-      console.error(err);
-      alert("Submit Error");
-    }
-  });
-
-  /* -----------------------
-     LOAD RATES
-  ------------------------*/
+  /* ---------------- LOAD RATES ---------------- */
   async function loadRates() {
     try {
       const res = await fetch(WEB_APP_URL + "?getRates=1");
@@ -159,6 +132,29 @@ window.addEventListener("load", function () {
       console.error("Rate load error:", err);
     }
   }
+
+  /* ---------------- SUBMIT ---------------- */
+  form.addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const data = Object.fromEntries(new FormData(form));
+
+    try {
+      await fetch(WEB_APP_URL, {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify(data)
+      });
+
+      alert("Saved Successfully!");
+      form.reset();
+      loadRates();
+
+    } catch (err) {
+      console.error(err);
+      alert("Submit failed");
+    }
+  });
 
   loadRates();
 
